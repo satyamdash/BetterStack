@@ -38,8 +38,8 @@ func SigninRouter(c *gin.Context) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user": user.Username,
-		"exp":  time.Now().Add(time.Hour * 1).Unix(), // 1 hour expiry
+		"sub": user.ID,
+		"exp": time.Now().Add(time.Hour * 1).Unix(), // 1 hour expiry
 	})
 
 	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
