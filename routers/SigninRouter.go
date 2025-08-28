@@ -1,6 +1,9 @@
 package routers
 
 import (
+	"os"
+	"time"
+
 	"github.com/BetterStack/db"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -36,9 +39,10 @@ func SigninRouter(c *gin.Context) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user": user.Username,
+		"exp":  time.Now().Add(time.Hour * 1).Unix(), // 1 hour expiry
 	})
 
-	tokenString, err := token.SignedString([]byte("your_secret_key"))
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	if err != nil {
 		c.JSON(500, gin.H{"error": "failed to generate token"})
 		return
